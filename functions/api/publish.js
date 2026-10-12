@@ -1,8 +1,8 @@
 export async function onRequestPost({ request, env }) {
   const cors = { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" };
   const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: cors });
-  if (!env.ADMIN_PASSWORD || !env.GITHUB_TOKEN) {
-    return json({ error: "Editor setup is incomplete. Add ADMIN_PASSWORD and GITHUB_TOKEN to Cloudflare Pages environment variables, then retry." }, 503);
+  if (!env.ADMIN_PASSWORD || !env.GITHUB_TOKEN || !env.CLOUDFLARE_API_TOKEN) {
+    return json({ error: "Editor setup is incomplete. Add ADMIN_PASSWORD, GITHUB_TOKEN, and CLOUDFLARE_API_TOKEN to Cloudflare Pages environment variables, then retry." }, 503);
   }
   const auth = request.headers.get("authorization") || "";
   if (auth !== "Bearer " + env.ADMIN_PASSWORD) return json({ error: "Wrong editor password." }, 401);
