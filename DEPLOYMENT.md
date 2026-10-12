@@ -1,28 +1,42 @@
-# Portfolio inbox deployment
+# Portfolio deployment
 
-The public portfolio can be published as static files on GitHub Pages, but GitHub Pages does not execute the `functions/api` backend. The inbox API must be deployed to a serverless host that supports Cloudflare Pages Functions.
+## What's in this repo
 
-## Backend files
-
-- `functions/api/messages.js`: authenticated inbox listing API
-- `functions/api/messages/[id].js`: authenticated message-status updates
+- `index.html`: public portfolio, including the contact form
+- `functions/api/messages.js`: public contact submission plus authenticated inbox listing
 - `functions/api/messages/auth.js`: admin password login
-- `admin.html`: private inbox UI
+- `functions/api/messages/[id].js`: authenticated message status updates
+- `admin.html`: inbox dashboard
 - `package.json`: Neon serverless PostgreSQL driver
 
-## Deploy on Cloudflare Pages
+## Important: use Cloudflare Pages for the working form and inbox
 
-1. Create a Cloudflare Pages project connected to this GitHub repository.
-2. Use the repository root as the project root and no framework preset. Set the build command to `npm install` and the output directory to `.`.
-3. In Pages project settings, add these **server-side environment variables** for production:
-   - `DATABASE_URL`: Neon connection string for the `portfolio` database.
-   - `ADMIN_PASSWORD`: a strong, unique password for the dashboard.
-   - `SESSION_SECRET`: a long random secret (at least 32 random bytes).
-4. Redeploy after adding variables.
-5. Visit `/admin.html` on the Cloudflare Pages deployment.
+GitHub Pages only serves static files. It does not run the `functions/api` serverless API, so the contact form and admin dashboard will not work on a GitHub Pages-only deployment. The repository's GitHub Pages workflow may continue to publish a static preview, but use the Cloudflare Pages URL for the complete app.
 
-Never put these values in `index.html`, `admin.html`, any committed file, or a public issue. Keep the Neon connection string in the host's encrypted environment-variable settings only.
+## One-time Cloudflare setup
 
-## Current limitation
+1. Sign in to Cloudflare and open **Workers & Pages → Create → Pages → Connect to Git**.
+2. Choose the GitHub repository `kaivalyajoshi20/my-portfoilo` and the `main` branch.
+3. Use the repository root, choose **None** for framework preset, set build command to `npm install`, and set build output directory to `.`.
+4. In the Pages project settings, add these as **encrypted/server-side production environment variables**:
+   - `DATABASE_URL`: connection string for the Neon `portfolio` database in project `kaivalya-portfolio`.
+   - `ADMIN_PASSWORD`: a strong, unique dashboard password.
+   - `SESSION_SECRET`: a cryptographically random secret with at least 32 random bytes.
+5. Save the settings and trigger a new deployment. Environment variable changes require a redeploy.
+6. Open the deployed site's `/admin.html` path and sign in with `ADMIN_PASSWORD`.
 
-The inbox dashboard and authenticated read/status API are scaffolded. The public portfolio currently has a GitHub contact link rather than a message form; add and test a public form endpoint before expecting visitors to submit messages into the database. GitHub Pages alone cannot host the API.
+Do not commit these values or put them in either HTML file. Never paste the Neon connection string into a public issue or commit.
+
+## Contact form behavior
+
+The form submits to `POST /api/messages`. The endpoint checks the same-origin request, JSON content type, field lengths, email format, a hidden honeypot, and a minimum completion time before inserting a message into `public.contact_messages`. The dashboard uses authenticated API requests to list messages and change their status.
+
+This is basic spam resistance, not a full rate-limiting service. Before promoting the site widely, consider enabling Cloudflare Turnstile and/or a rate-limiting rule for `POST /api/messages`.
+
+## Database
+
+The Neon database schema is already applied. The `public.contact_messages` table stores sender name, email, optional subject, message, creation time, and inbox status.
+
+## Status
+
+The code and schema are committed, but a live Cloudflare Pages deployment and end-to-end test still require a Cloudflare account/project and its private environment variables. Do not treat the form as live until a test message appears in `/admin.html` on the Cloudflare Pages domain.
