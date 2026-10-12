@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm install && mkdir -p dist && cp index.html admin.html favicon.svg _headers dist/"
+    "build": "npm install && mkdir -p dist && cp index.html admin.html favicon.svg _headers portrait.jpg dist/"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2"
