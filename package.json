@@ -2,6 +2,9 @@
   "name": "kaivalya-portfolio",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "npm install && mkdir -p dist && cp index.html admin.html favicon.svg _headers dist/"
+  },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2"
   }
