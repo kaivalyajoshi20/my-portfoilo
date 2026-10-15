@@ -168,6 +168,31 @@ body.dark-theme .hero h1 .lime{color:#ff4b45}
 body.dark-theme .hero .eyebrow:before{background:#ff4b45}
 body.dark-theme .scroll-cue{color:#ff4b45}
 
+/* Theme polish: keep the header and controls consistent with the selected theme. */
+.header{background:rgba(247,247,245,.94);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+.nav{color:var(--muted)}
+.nav .nav-cta{color:#fff}
+.btn-quiet{color:var(--muted)}
+.hero-description{color:var(--muted)}
+.about-main>p:not(.about-lead){color:var(--muted)}
+.stack-list span{color:var(--muted)}
+.project-tags span,.contact-social a,.footer-right{color:var(--muted)}
+.field label{color:var(--muted)}
+.field input,.field textarea{background:var(--bg);border-color:var(--line);color:var(--ink)}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted)}
+.privacy{color:var(--muted)}
+.mobile-nav{background:var(--panel);color:var(--ink)}
+body.dark-theme .header{background:rgba(23,23,23,.92)}
+body.dark-theme .nav{color:#b4bbb2}
+body.dark-theme .nav .nav-cta{color:#fff}
+body.dark-theme .btn-quiet{color:#c5cbc2}
+body.dark-theme .hero-description,body.dark-theme .about-main>p:not(.about-lead){color:#a2aaa0}
+body.dark-theme .stack-list span,body.dark-theme .project-tags span,body.dark-theme .contact-social a,body.dark-theme .footer-right,body.dark-theme .field label,body.dark-theme .privacy{color:#b8c0b6}
+body.dark-theme .field input,body.dark-theme .field textarea{background:#171717;border-color:#2a302b;color:var(--ink)}
+body.dark-theme .field input::placeholder,body.dark-theme .field textarea::placeholder{color:#646d64}
+body.dark-theme .mobile-nav{background:#101310;color:var(--ink)}
+@media(max-width:640px){.mobile-nav{background:var(--panel)}body.dark-theme .mobile-nav{background:#101310}}
+
 </style>
 </head>
 <body>
