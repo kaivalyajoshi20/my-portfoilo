@@ -65,13 +65,60 @@
 @media(max-width:850px){.hero-grid{grid-template-columns:1fr;gap:36px;padding:58px 0 48px;min-height:auto}.hero-copy{max-width:720px}.hero-art{height:clamp(390px,72vw,560px);width:100%}.hero h1{font-size:clamp(58px,10vw,88px)}}
 @media(max-width:640px){.hero-grid{padding:48px 0 34px;gap:28px}.hero-art{height:410px}.art-arch{left:10%;width:65%}.art-stats{width:20%}.hero h1{font-size:clamp(54px,13vw,76px)}}
 
+
+/* Mobile overflow repair + accessible theme switch */
+html,body{width:100%;max-width:100%;overflow-x:clip}
+.wrap{width:min(var(--max),calc(100% - 88px));min-width:0}
+main,section,header,footer,.section-top,.hero-grid,.hero-bottom,.about-grid,.contact-grid,.thanks-inner{min-width:0;max-width:100%}
+.hero-bottom{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hero-bottom div{min-width:0;overflow-wrap:anywhere;line-height:1.7}
+.section-top>*,.about-grid>*,.contact-grid>*,.project,.project-meta,.project-tags{min-width:0}
+.section-title{overflow-wrap:anywhere}
+.repo-loading{max-width:100%;overflow-wrap:anywhere;line-height:1.7}
+.theme-toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:10px 12px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.header{gap:16px}
+@media(max-width:900px){.wrap{width:calc(100% - 52px)}.header{gap:10px}.theme-toggle span{display:none}}
+@media(max-width:640px){.wrap{width:calc(100% - 36px)}.hero-bottom{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-bottom div{padding-right:8px}.hero-bottom div+div{padding-left:12px}.theme-toggle{padding:9px 10px}.header .brand{margin-right:auto}}
+/* Full palette swap when dark mode is selected */
+body.dark-theme{--bg:#171717;--panel:#222222;--panel2:#2a2a2a;--ink:#f5f5f5;--muted:#b3b3b3;--line:#454545;background:var(--bg);color:var(--ink)}
+body.dark-theme .header{background:rgba(23,23,23,.92);color:var(--ink)}
+body.dark-theme .nav{color:#c4c4c4}
+body.dark-theme .hero h1 .outline{-webkit-text-stroke:1px #aaa;color:transparent}
+body.dark-theme .hero h1 .lime{color:#E10600}
+body.dark-theme .hero-description,body.dark-theme .section-note,body.dark-theme .hero-bottom div,body.dark-theme .project-desc,body.dark-theme .about-aside p,body.dark-theme .about-main>p:not(.about-lead),body.dark-theme .team-description{color:#b3b3b3}
+body.dark-theme .hero-bottom,body.dark-theme .about-section,body.dark-theme .team-section,body.dark-theme .thanks{background:#202020}
+body.dark-theme .hero-bottom b{color:#f5f5f5}
+body.dark-theme .hero-art{background:linear-gradient(145deg,#39302f,#171717)}
+body.dark-theme .project-visual{border-color:#454545}
+body.dark-theme .visual-01{background:radial-gradient(ellipse at 70% 30%,#3a3a3a 0,#242424 34%,#171717 70%)}
+body.dark-theme .visual-02{background:radial-gradient(ellipse at 35% 45%,#3a3a3a 0,#242424 43%,#171717 75%)}
+body.dark-theme .visual-03{background:radial-gradient(ellipse at 60% 30%,#6b2424 0,#302626 38%,#171717 75%)}
+body.dark-theme .browser{background:#0e1511;border-color:#a8c29866}
+body.dark-theme .browser-content{color:#e9efdf}
+body.dark-theme .browser-lines i{background:linear-gradient(145deg,#354b30,#18221a)}
+body.dark-theme .dash-side,body.dark-theme .dash-main{background:#242424e8;border-color:#b9c2ff26}
+body.dark-theme .dash-logo{color:#e7e8ff}
+body.dark-theme .dash-stats i{background:#3b3b3b}
+body.dark-theme .commerce{background:#242020;border-color:#b3b3b333}
+body.dark-theme .commerce-copy{color:#f2e6d5}
+body.dark-theme .team-card,body.dark-theme .contact-form{background:var(--panel)}
+body.dark-theme .project-tags span,body.dark-theme .stack-list span,body.dark-theme .contact-social a,body.dark-theme .footer-right{color:#c5c5c5}
+body.dark-theme .field label{color:#b2bbb0}
+body.dark-theme .field input,body.dark-theme .field textarea{background:#171717;border-color:#454545;color:#f5f5f5}
+body.dark-theme .field input::placeholder,body.dark-theme .field textarea::placeholder{color:#888}
+body.dark-theme .privacy{color:#aaa}
+body.dark-theme .mobile-nav{background:#222}
+body.dark-theme .btn-quiet{color:#ddd}
+body.dark-theme .theme-toggle{color:#f5f5f5}
+body.dark-theme .thanks h2{color:#f5f5f5}
+
 </style>
 </head>
 <body>
 <header class="header wrap">
 <a class="brand" href="#top" aria-label="Kaivalya Joshi home">KJ<span>®</span></a>
 <nav class="nav" aria-label="Main navigation"><a href="#work">Work / 01</a><a href="#about">About / 02</a><a href="#team">Team / 03</a><a href="#stack">Toolkit / 04</a><a class="nav-cta" href="#contact">LET'S TALK ↗</a></nav>
-<button class="menu" id="menuButton" aria-expanded="false" aria-controls="mobileNav">MENU +</button>
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" title="Switch theme">☾ <span>Dark mode</span></button><button class="menu" id="menuButton" aria-expanded="false" aria-controls="mobileNav">MENU +</button>
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation"><a href="#work">Selected work ↗</a><a href="#about">About me ↗</a><a href="#team">The team ↗</a><a href="#stack">Toolkit ↗</a><a href="#contact">Contact ↗</a></nav>
 </header>
 <main>
@@ -117,6 +164,12 @@ const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches; if('I
 const portraitImage=document.getElementById('portraitImage');if(portraitImage&&'IntersectionObserver'in window){const photoObserver=new IntersectionObserver(entries=>entries.forEach(entry=>portraitImage.classList.toggle('photo-visible',entry.isIntersecting)),{threshold:.25});photoObserver.observe(portraitImage)}else if(portraitImage){portraitImage.classList.add('photo-visible')}
 const menuButton=document.getElementById('menuButton'),mobileNav=document.getElementById('mobileNav');menuButton.addEventListener('click',()=>{const open=mobileNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open));menuButton.textContent=open?'CLOSE −':'MENU +'});mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobileNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.textContent='MENU +'}));
 document.getElementById('year').textContent=new Date().getFullYear();
+
+const themeToggle=document.getElementById('themeToggle');
+function setTheme(mode){const dark=mode==='dark';document.body.classList.toggle('dark-theme',dark);themeToggle.innerHTML=dark?'☀ <span>Light mode</span>':'☾ <span>Dark mode</span>';themeToggle.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');document.querySelector('meta[name="theme-color"]').content=dark?'#171717':'#f7f7f5';try{localStorage.setItem('kj-theme',mode)}catch(e){}}
+let savedTheme='light';try{savedTheme=localStorage.getItem('kj-theme')||'light'}catch(e){}setTheme(savedTheme);
+themeToggle.addEventListener('click',()=>setTheme(document.body.classList.contains('dark-theme')?'light':'dark'));
+
 const form=document.getElementById('contactForm'),status=document.getElementById('formStatus'),submit=form.querySelector('button[type="submit"]'),started=document.getElementById('formStartedAt');started.value=String(Date.now());
 form.addEventListener('submit',async e=>{e.preventDefault();status.textContent='';status.classList.remove('error');submit.disabled=true;document.getElementById('submitText').textContent='SENDING…';try{const response=await fetch('/api/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form).entries()))});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Message could not be sent. Please try again.');form.reset();started.value=String(Date.now());status.textContent='Message received. Thanks for reaching out.';}catch(err){status.textContent=err.message||'Something went wrong. Please try again.';status.classList.add('error');}finally{submit.disabled=false;document.getElementById('submitText').textContent='SEND THE MESSAGE';}});
 </script>
