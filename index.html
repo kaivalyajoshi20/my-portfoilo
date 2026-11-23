@@ -184,6 +184,49 @@ body{background:var(--paper);color:var(--ink)}
 @keyframes emberFlicker{from{transform:translate(-50%,-54%) scale(.78) rotate(-4deg)}to{transform:translate(-50%,-66%) scale(1.08) rotate(4deg)}}
 @media(max-width:650px){.brandmark-img{width:34px!important;height:34px!important;min-width:34px;flex-basis:34px}.hero-word{font-size:clamp(48px,13.5vw,86px)}}
 @media(prefers-reduced-motion:reduce){.hero-word.is-flaming:before,.hero-word.is-flaming:after{animation:none!important}}
+
+/* CODEYAAR metal access hatch */
+.scratch-wrap{width:min(430px,calc(100vw - 36px));margin:28px 0 15px;perspective:1100px;z-index:8}
+.scratch-card{width:100%;height:232px;position:relative;overflow:visible;border:0;border-radius:9px;background:transparent;box-shadow:none;touch-action:auto}
+.scratch-reveal{position:absolute;inset:0;border-radius:8px;background:linear-gradient(145deg,#252b31,#11161b);color:#f0eee9;padding:18px;z-index:0}
+.scratch-reveal strong{font-size:29px;color:#f4eee4}
+.scratch-reveal .scratch-overline{color:#d8b98a}
+.scratch-reveal .scratch-hint{color:#aab4bd}
+.plate-face{position:absolute;inset:0;z-index:2;overflow:hidden;border-radius:9px;border:1px solid #aab1b4;background:linear-gradient(135deg,#626d73 0%,#3c454c 18%,#252d34 46%,#4b555c 68%,#222a30 100%);box-shadow:inset 0 2px 2px #ffffff55,inset 0 -5px 12px #0009,0 18px 32px #0008;transition:filter .35s,box-shadow .35s}
+.plate-face:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.3;background:repeating-linear-gradient(0deg,transparent 0 3px,#dce4e522 4px,transparent 5px 7px),linear-gradient(115deg,#fff2,transparent 32%,#0005 70%,#fff1)}
+.plate-face:after{content:"";position:absolute;inset:9px;border:1px solid #d8e0e333;border-radius:5px;pointer-events:none}
+.plate-stamp{position:absolute;top:20px;left:0;right:0;text-align:center;color:#e6e8e6;font:700 12px var(--mono);letter-spacing:.17em;text-shadow:0 2px 3px #0008}
+.plate-stamp span{font-size:7px;color:#b8c0c2;letter-spacing:.12em}
+.plate-instruction{position:absolute;top:64px;left:15px;right:15px;margin:0;text-align:center;color:#d7dcdd;font:8px/1.8 var(--mono);letter-spacing:.1em;text-shadow:0 2px 3px #0009}
+.plate-instruction b{font-size:9px;color:#f0d6a8;letter-spacing:.08em}
+.plate-screws{position:absolute;inset:0;z-index:4;pointer-events:none}
+.plate-screw{position:absolute;width:25px;height:25px;border-radius:50%;padding:0;border:1px solid #c6cdd0;background:radial-gradient(circle at 33% 27%,#e3e7e7 0%,#8d999e 28%,#48535a 64%,#1b2227 100%);box-shadow:0 2px 5px #000b,inset 0 1px 2px #fff9;pointer-events:auto;transition:transform .3s,opacity .3s}
+.plate-screw:before,.plate-screw:after{content:"";position:absolute;left:6px;right:6px;top:11px;height:2px;border-radius:2px;background:#263038;box-shadow:0 1px 1px #fff5}
+.plate-screw:after{transform:rotate(90deg)}
+.screw-tl{top:12px;left:12px}.screw-tr{top:12px;right:12px}.screw-bl{bottom:12px;left:12px}.screw-br{bottom:12px;right:12px}
+.plate-screw:hover{filter:brightness(1.18)}.plate-screw.removed{transform:rotate(130deg) scale(.15);opacity:0;pointer-events:none}
+.plate-knob{position:absolute;z-index:5;left:50%;top:57%;width:66px;height:66px;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #b6c0c4;background:radial-gradient(circle at 34% 26%,#d8dddc 0%,#929da0 18%,#535f65 47%,#252e34 73%,#11181d 100%);box-shadow:0 7px 13px #0009,inset 0 2px 3px #fff9,inset 0 -4px 7px #0009;display:grid;place-items:center;transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .3s}
+.plate-knob:disabled{cursor:not-allowed;filter:grayscale(.45) brightness(.8)}
+.plate-knob:not(:disabled){cursor:grab;box-shadow:0 0 0 3px #e2c18b22,0 7px 13px #0009,inset 0 2px 3px #fff9}
+.knob-grip{position:absolute;width:43px;height:43px;border-radius:50%;border:1px solid #e1e5e455;background:repeating-conic-gradient(from 0deg,#c8d0d1 0deg 4deg,#556168 5deg 12deg);box-shadow:inset 0 1px 4px #0008}
+.knob-core{position:relative;width:22px;height:22px;border-radius:50%;border:1px solid #d4dadd;background:radial-gradient(circle at 35% 25%,#f2e4c5,#a4aeb0 35%,#46545b 78%);box-shadow:0 2px 4px #0009}
+.plate-knob:not(:disabled):hover{filter:brightness(1.15)}
+.plate-footer{position:absolute;left:17px;right:17px;bottom:18px;display:flex;justify-content:space-between;gap:8px;color:#aab5b9;font:7px var(--mono);letter-spacing:.1em}
+.plate-status{color:#e8d1a9;text-align:right}
+.scratch-card.unlocked .plate-face{box-shadow:inset 0 2px 2px #ffffff66,inset 0 -5px 12px #0009,0 0 25px #d6b78333,0 18px 32px #0008}
+.scratch-card.knob-turned .plate-knob{transform:translate(-50%,-50%) rotate(450deg)}
+.scratch-card.plate-fall{position:fixed!important;z-index:99999!important;inset:0!important;width:100vw!important;height:100dvh!important;margin:0!important;border-radius:0!important;perspective:none;animation:plateDrop 1.65s cubic-bezier(.62,.02,.9,.42) forwards}
+.scratch-card.plate-fall .plate-face{border-radius:0;box-shadow:inset 0 0 0 8px #111820, inset 0 0 0 10px #7f8b90,0 40px 100px #000c}
+.scratch-card.plate-fall .plate-instruction{top:42%;font-size:clamp(12px,2vw,20px)}
+.scratch-card.plate-fall .plate-stamp{top:28%}
+.scratch-card.plate-fall .plate-knob{width:clamp(90px,18vw,180px);height:clamp(90px,18vw,180px);top:55%}
+.scratch-card.plate-fall .knob-grip{width:68%;height:68%}
+.scratch-card.plate-fall .knob-core{width:35%;height:35%}
+.scratch-card.plate-fall .plate-screw{width:clamp(30px,5vw,56px);height:clamp(30px,5vw,56px)}
+.scratch-card.plate-gone{display:none!important}
+@keyframes plateDrop{0%{transform:translate3d(0,0,0) rotateX(0) rotateZ(0) scale(1);opacity:1}12%{transform:translate3d(0,-3vh,0) rotateX(-7deg) rotateZ(-1deg) scale(1.015)}28%{transform:translate3d(0,9vh,0) rotateX(13deg) rotateZ(3deg) scale(1.04)}52%{transform:translate3d(0,42vh,0) rotateX(25deg) rotateZ(-7deg) scale(1.08)}78%{transform:translate3d(0,88vh,0) rotateX(34deg) rotateZ(11deg) scale(1.12)}100%{transform:translate3d(0,125vh,0) rotateX(48deg) rotateZ(17deg) scale(1.16);opacity:0}}
+@media(max-width:650px){.scratch-wrap{width:min(350px,calc(100vw - 34px))}.scratch-card{height:210px}.plate-instruction{top:61px;font-size:7px}.plate-instruction b{font-size:8px}.plate-knob{width:60px;height:60px}.plate-footer{font-size:6px;left:14px;right:14px}}
+@media(prefers-reduced-motion:reduce){.scratch-card.plate-fall{animation:none!important}.scratch-card.plate-fall .plate-face{opacity:0;transition:opacity .2s}.plate-screw,.plate-knob{transition:none!important}}
 </style>
 </head>
 <body>
@@ -196,10 +239,17 @@ body{background:var(--paper);color:var(--ink)}
 <section class="hero hero-showcase" aria-label="CODEYAAR studio introduction">
 <div class="hero-topline"><span class="kicker">INDEPENDENT DIGITAL STUDIO · INDIA</span><span class="hero-index">EST. ON CURIOSITY / 2026</span></div>
 <div class="scratch-wrap">
-<div class="scratch-card" id="scratchCard">
-<div class="scratch-reveal"><span class="scratch-overline">A LITTLE SPARK GOES A LONG WAY</span><strong>GOOD IDEAS<br>DESERVE TO BE BUILT.</strong><span class="scratch-hint">YOU FOUND THE GOOD STUFF ✦</span></div>
-<canvas id="scratchCanvas" aria-label="Scratch this card to reveal a studio message"></canvas>
-<span class="scratch-label">✦ SCRATCH TO REVEAL ✦</span>
+<div class="scratch-card" id="scratchCard" aria-label="Metal access plate. Remove all four screws, then rotate the centre knob to reveal the message.">
+<div class="scratch-reveal"><span class="scratch-overline">ACCESS GRANTED</span><strong>GOOD IDEAS<br>DESERVE TO BE BUILT.</strong><span class="scratch-hint">YOU FOUND THE GOOD STUFF ✦</span></div>
+<div class="plate-face" id="plateFace">
+<div class="plate-stamp">CODEYAAR <span>· STUDIO ACCESS PANEL</span></div>
+<p class="plate-instruction">REMOVE ALL 4 SCREWS FIRST<br><b>THEN ROTATE THE KNOB TO REVEAL</b></p>
+<div class="plate-screws" aria-label="Four removable screws">
+<button class="plate-screw screw-tl" type="button" data-screw="0" aria-label="Remove screw 1" aria-pressed="false"><span></span></button><button class="plate-screw screw-tr" type="button" data-screw="1" aria-label="Remove screw 2" aria-pressed="false"><span></span></button><button class="plate-screw screw-bl" type="button" data-screw="2" aria-label="Remove screw 3" aria-pressed="false"><span></span></button><button class="plate-screw screw-br" type="button" data-screw="3" aria-label="Remove screw 4" aria-pressed="false"><span></span></button>
+</div>
+<button class="plate-knob" id="plateKnob" type="button" aria-label="Rotate the centre knob to reveal" disabled><span class="knob-grip"></span><span class="knob-core"></span></button>
+<div class="plate-footer"><span>SEALED / 04 FASTENERS</span><span class="plate-status" id="plateStatus" aria-live="polite">4 SCREWS LOCKED</span></div>
+</div>
 </div>
 </div>
 <div class="hero-center">
@@ -288,9 +338,15 @@ function renderRepos(filter){
 document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest("button[data-filter]");if(!b)return;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));renderRepos(b.dataset.filter);});
 if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");io.unobserve(e.target);}}),{threshold:.08});document.querySelectorAll(".reveal").forEach(el=>io.observe(el));}else document.querySelectorAll(".reveal").forEach(el=>el.classList.add("visible"));
 
-/* Interactive scratch-card reveal */
-(()=>{const card=document.getElementById("scratchCard"),canvas=document.getElementById("scratchCanvas");if(!card||!canvas)return;const ctx=canvas.getContext("2d");let drawing=false,erased=0,last=null;const setup=()=>{const rect=card.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.globalCompositeOperation="source-over";const g=ctx.createLinearGradient(0,0,rect.width,rect.height);g.addColorStop(0,"#343832");g.addColorStop(.5,"#777b70");g.addColorStop(1,"#292d28");ctx.fillStyle=g;ctx.fillRect(0,0,rect.width,rect.height);ctx.fillStyle="#f5f4f0";ctx.font="9px 'DM Mono', monospace";ctx.textAlign="center";ctx.fillText("CODEYAAR / STUDIO PASS",rect.width/2,rect.height/2-2);ctx.font="7px 'DM Mono', monospace";ctx.fillText("RUB HERE TO REVEAL",rect.width/2,rect.height/2+15);erased=0;card.classList.remove("scratched")};const point=e=>{const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};const scratch=e=>{if(!drawing)return;const p=point(e);ctx.globalCompositeOperation="destination-out";ctx.lineWidth=25;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();if(last){ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y)}else{ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+1,p.y+1)}ctx.stroke();last=p;erased+=1;if(erased>16){card.classList.add("scratched");ctx.clearRect(0,0,canvas.width,canvas.height)}};canvas.addEventListener("pointerdown",e=>{drawing=true;last=null;canvas.setPointerCapture?.(e.pointerId);scratch(e)});canvas.addEventListener("pointermove",scratch);["pointerup","pointercancel","lostpointercapture"].forEach(ev=>canvas.addEventListener(ev,()=>{drawing=false;last=null}));setup();window.addEventListener("resize",setup,{passive:true})})();
-
+/* Four-fastener access hatch and dramatic plate fall */
+(()=>{const card=document.getElementById("scratchCard"),knob=document.getElementById("plateKnob"),status=document.getElementById("plateStatus");if(!card||!knob||!status)return;
+ const screws=[...card.querySelectorAll(".plate-screw")];let removed=new Set(),opening=false;
+ screws.forEach(btn=>btn.addEventListener("click",()=>{if(opening||btn.classList.contains("removed"))return;btn.classList.add("removed");btn.setAttribute("aria-pressed","true");removed.add(btn.dataset.screw);status.textContent=removed.size===4?"ALL SCREWS REMOVED · ROTATE KNOB":(4-removed.size)+" SCREWS LEFT";if(removed.size===4){knob.disabled=false;card.classList.add("unlocked")}}));
+ knob.addEventListener("click",()=>{if(knob.disabled||opening)return;opening=true;knob.classList.add("turned");status.textContent="UNSEALING…";card.classList.add("knob-turned");const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){card.classList.add("plate-gone");return}
+  window.setTimeout(()=>{card.classList.add("plate-fall");card.addEventListener("animationend",()=>{card.classList.add("plate-gone");card.classList.remove("plate-fall")},{once:true})},380);
+ });
+})();
 
 /* Pointer + touch tracked flame hotspot. */
 (()=>{const word=document.getElementById("heroWord");if(!word)return;let activeTouch=null,hideTimer;
