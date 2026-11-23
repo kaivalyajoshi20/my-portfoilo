@@ -1,18 +1,24 @@
-# Kaivalya Joshi — Portfolio
+# CODEYAAR — Digital Studio
 
-A responsive, editorial-style portfolio site built as a lightweight static website. The page uses HTML, CSS, and a small amount of JavaScript; no package install or build step is required.
+A responsive, editorial-style website for CODEYAAR, an independent digital studio exploring the space between design and engineering.
 
 ## Features
-- Responsive layout for desktop, tablet, and mobile
-- Editorial typography, warm neutral palette, image-led project cards
-- Scroll progress, reveal-on-scroll motion, mobile navigation, and reduced-motion support
+- Minimal, warm editorial layout inspired by modern independent studio portfolios
+- Responsive navigation and mobile-friendly sections
+- Studio profiles for Kaivalya Joshi and Gauravi
+- Live public project list sourced from the CODEYAAR GitHub account
+- Services, current focus, capabilities and contact sections
+- Cloudflare Pages Functions contact form and existing admin inbox
 - SEO and social preview metadata, custom SVG favicon
-- GitHub profile links and clearly labelled concept studies
+- Reduced-motion support and accessible form status messages
 
-## Preview locally
-Open `index.html` in a browser, or use any static file server.
+## Local preview
+Open `index.html` in a browser, or use a static file server.
 
-## Publish
-The included GitHub Actions workflow publishes the root of the repository to GitHub Pages. In the repository, open **Settings → Pages** and choose **GitHub Actions** as the build and deployment source if it is not already selected.
+## Build and deploy
+Cloudflare Pages is connected to the `main` branch of this repository. The Pages build runs `npm run build` and publishes the `dist` directory. The build copies the frontend, local profile images, and the `functions/` directory so the contact API remains available.
 
-The case studies are concept studies, not claims of completed client work. Replace them with accurate projects as you choose. The site uses remotely hosted Unsplash imagery and Google Fonts.
+The contact form posts to `/api/messages`. Keep `DATABASE_URL`, `ADMIN_PASSWORD`, and `SESSION_SECRET` configured as encrypted Cloudflare Pages production environment variables. Never commit those secrets.
+
+## Content notes
+The project section lists public repositories from GitHub. Update team descriptions and service details as the studio's work evolves.
