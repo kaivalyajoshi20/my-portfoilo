@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="CODEYAAR CY mark">
+<defs>
+ <linearGradient id="cyg" x1="12" y1="12" x2="88" y2="90" gradientUnits="userSpaceOnUse">
+  <stop stop-color="#59456b"/><stop offset=".52" stop-color="#3e354e"/><stop offset="1" stop-color="#315447"/>
+ </linearGradient>
+</defs>
+<path d="M58 18H39C20 18 9 31 9 49s11 33 30 33h13" fill="none" stroke="url(#cyg)" stroke-width="13" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M39 49 59 69 88 30M59 69v18" fill="none" stroke="url(#cyg)" stroke-width="13" stroke-linecap="butt" stroke-linejoin="round"/>
+</svg>
