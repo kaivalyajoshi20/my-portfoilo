@@ -143,11 +143,38 @@ body{background:var(--paper);color:var(--ink)}
 @media(max-width:390px){.scratch-card{width:calc(100vw - 42px);height:168px}}
 @media(prefers-reduced-motion:reduce){.scratch-wrap:hover:before{animation:none}}
 
+
+/* CODEYAAR selected CY identity + pointer-following ember */
+.brandmark-img{width:30px;height:30px;display:block;object-fit:contain}
+.footer .brandmark-img{width:28px;height:28px}
+.hero-word{font-size:clamp(76px,14.5vw,184px);letter-spacing:-.105em;isolation:isolate}
+.hero-word:hover,.hero-word:focus-visible{color:#f2e9e6;text-shadow:0 2px 0 #261a27,0 0 18px #6c355a55;transform:translateY(-1px) scale(1.012);animation:none}
+.hero-word:before{content:"";position:absolute;z-index:-1;left:var(--flame-x,50%);top:var(--flame-y,100%);width:155px;height:105px;transform:translate(-50%,-48%);border-radius:50%;background:radial-gradient(ellipse at 50% 68%,#d68a58aa 0%,#9a4d5d66 26%,#513c7950 48%,transparent 72%);filter:blur(15px);opacity:0;pointer-events:none;transition:opacity .16s ease}
+.hero-word:after{content:"";position:absolute;z-index:-1;left:var(--flame-x,50%);top:var(--flame-y,100%);width:72px;height:72px;transform:translate(-50%,-58%);border-radius:50%;background:radial-gradient(ellipse at 50% 78%,#f3b47799 0%,#c16a6555 27%,transparent 70%);filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .16s ease}
+.hero-word.is-flaming:before,.hero-word.is-flaming:after{opacity:1}
+.hero-word.is-flaming{color:#f4e9e4;text-shadow:0 0 15px #9a5b6a55;animation:none}
+.contact-panel{background:#171a1f!important;color:#edf1f4!important;border:1px solid #39424c}
+.contact-panel .section-no{color:#aab5bf!important}
+.contact-title{color:#f2f4f5}
+.contact-copy{color:#aab5bf!important}
+.contact-links .button{color:#edf1f4!important;border-color:#68737e!important}
+.contact-links .button:hover{background:#edf1f4!important;color:#171a1f!important}
+.contact-form{background:#202831!important;border-color:#46515d!important}
+.field label{color:#aab5bf!important}
+.field input,.field textarea{background:#171a1f!important;border-color:#46515d!important;color:#edf1f4!important}
+.field input:focus,.field textarea:focus{border-color:#9a7899!important}
+.field input::placeholder,.field textarea::placeholder{color:#75818d!important}
+.submit{background:#51405d!important;color:#f5eff5!important}
+.form-status{color:#c9b2d1!important}
+.form-status.error{color:#ff9297!important}
+@media(max-width:650px){.hero-word{font-size:clamp(48px,13.5vw,86px)}}
+@media(prefers-reduced-motion:reduce){.hero-word,.hero-word:before,.hero-word:after{transition:none!important;animation:none!important}}
+
 </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap navrow">
-<a class="brand" href="#home" aria-label="CODEYAAR home"><span class="brandmark">C</span>CODEYAAR</a>
+<a class="brand" href="#home" aria-label="CODEYAAR home"><img class="brandmark-img" src="/cy-mark.svg" alt="" aria-hidden="true">CODEYAAR</a>
 <nav class="nav" aria-label="Main navigation"><a href="#home">Home</a><a href="#studio">Studio</a><a href="#work">Work</a><a href="#contact">Contact</a></nav>
 <div class="navright"><span class="availability"><i class="dot"></i> OPEN TO GOOD IDEAS</span><a class="navcta" href="#contact">START A PROJECT ↗</a><button class="menu" id="menuButton" aria-label="Go to contact">☰</button></div>
 </div></header>
@@ -165,7 +192,7 @@ body{background:var(--paper);color:var(--ink)}
 
 <div class="hero-word-wrap">
 <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
-<h1 class="hero-word" id="heroWord" tabindex="0" aria-label="CODEYAAR">CODEYAAR<span class="firework fw-one">✳</span><span class="firework fw-two">✦</span><span class="firework fw-three">✳</span><span class="firework fw-four">✦</span><span class="firework fw-five">✧</span></h1>
+<h1 class="hero-word" id="heroWord" tabindex="0" aria-label="CODEYAAR">CODEYAAR</h1>
 <p class="hero-tagline">WE TURN IDEAS INTO DIGITAL THINGS THAT WORK.</p>
 </div>
 </div>
@@ -221,7 +248,7 @@ body{background:var(--paper);color:var(--ink)}
 </div>
 </section>
 </main>
-<footer class="wrap footer"><a class="brand" href="#home"><span class="brandmark">C</span>CODEYAAR</a><p>Independent digital studio · India · © <span id="year"></span></p><div class="footer-links"><a href="#home">Back to top ↑</a><a href="https://github.com/kaivalyajoshi20" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="mailto:kaivalyaj2007@outlook.com">Email ↗</a></div></footer>
+<footer class="wrap footer"><a class="brand" href="#home"><img class="brandmark-img" src="/cy-mark.svg" alt="" aria-hidden="true">CODEYAAR</a><p>Independent digital studio · India · © <span id="year"></span></p><div class="footer-links"><a href="#home">Back to top ↑</a><a href="https://github.com/kaivalyajoshi20" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="mailto:kaivalyaj2007@outlook.com">Email ↗</a></div></footer>
 <script>
 const projects=document.getElementById("projects");
 const escapeHTML=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -249,6 +276,19 @@ if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>
 
 /* Interactive scratch-card reveal */
 (()=>{const card=document.getElementById("scratchCard"),canvas=document.getElementById("scratchCanvas");if(!card||!canvas)return;const ctx=canvas.getContext("2d");let drawing=false,erased=0,last=null;const setup=()=>{const rect=card.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.globalCompositeOperation="source-over";const g=ctx.createLinearGradient(0,0,rect.width,rect.height);g.addColorStop(0,"#343832");g.addColorStop(.5,"#777b70");g.addColorStop(1,"#292d28");ctx.fillStyle=g;ctx.fillRect(0,0,rect.width,rect.height);ctx.fillStyle="#f5f4f0";ctx.font="9px 'DM Mono', monospace";ctx.textAlign="center";ctx.fillText("CODEYAAR / STUDIO PASS",rect.width/2,rect.height/2-2);ctx.font="7px 'DM Mono', monospace";ctx.fillText("RUB HERE TO REVEAL",rect.width/2,rect.height/2+15);erased=0;card.classList.remove("scratched")};const point=e=>{const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};const scratch=e=>{if(!drawing)return;const p=point(e);ctx.globalCompositeOperation="destination-out";ctx.lineWidth=25;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();if(last){ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y)}else{ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+1,p.y+1)}ctx.stroke();last=p;erased+=1;if(erased>16){card.classList.add("scratched");ctx.clearRect(0,0,canvas.width,canvas.height)}};canvas.addEventListener("pointerdown",e=>{drawing=true;last=null;canvas.setPointerCapture?.(e.pointerId);scratch(e)});canvas.addEventListener("pointermove",scratch);["pointerup","pointercancel","lostpointercapture"].forEach(ev=>canvas.addEventListener(ev,()=>{drawing=false;last=null}));setup();window.addEventListener("resize",setup,{passive:true})})();
+
+
+/* Flame hotspot follows the pointer or touch position over the wordmark. */
+(()=>{const word=document.getElementById("heroWord");if(!word)return;
+ const setPoint=e=>{const r=word.getBoundingClientRect();const x=Math.max(0,Math.min(r.width,e.clientX-r.left));const y=Math.max(0,Math.min(r.height,e.clientY-r.top));word.style.setProperty("--flame-x",x+"px");word.style.setProperty("--flame-y",y+"px");word.classList.add("is-flaming")};
+ word.addEventListener("pointermove",e=>{if(e.pointerType==="mouse"||e.buttons>0||e.pointerType==="pen")setPoint(e)});
+ word.addEventListener("pointerdown",setPoint);
+ const stop=e=>{if(e.pointerType!=="touch")word.classList.remove("is-flaming")};
+ word.addEventListener("pointerleave",()=>word.classList.remove("is-flaming"));
+ word.addEventListener("pointerup",e=>{if(e.pointerType==="touch")setTimeout(()=>word.classList.remove("is-flaming"),450)});
+ word.addEventListener("pointercancel",()=>word.classList.remove("is-flaming"));
+ word.addEventListener("blur",()=>word.classList.remove("is-flaming"));
+})();
 
 document.getElementById("year").textContent=new Date().getFullYear();
 document.getElementById("menuButton").addEventListener("click",()=>document.getElementById("contact").scrollIntoView({behavior:"smooth"}));
