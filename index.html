@@ -170,11 +170,25 @@ body{background:var(--paper);color:var(--ink)}
 @media(max-width:650px){.hero-word{font-size:clamp(48px,13.5vw,86px)}}
 @media(prefers-reduced-motion:reduce){.hero-word,.hero-word:before,.hero-word:after{transition:none!important;animation:none!important}}
 
+
+/* Visibility and touch-safe flame rendering fix */
+.brand{gap:11px!important}
+.brandmark-img{width:36px!important;height:36px!important;min-width:36px;flex:0 0 36px;object-fit:contain;opacity:1!important;visibility:visible!important;filter:drop-shadow(0 2px 7px #0008)}
+.footer .brandmark-img{width:32px!important;height:32px!important;min-width:32px;flex-basis:32px}
+.hero-word{touch-action:pan-y;position:relative}
+.hero-word:hover:before,.hero-word:focus-visible:before,.hero-word.is-flaming:before{left:var(--flame-x,50%);right:auto;top:var(--flame-y,100%);bottom:auto;width:150px;height:125px;background:radial-gradient(ellipse at 50% 82%,#ffd18a 0%,#f28b4b 13%,#c65c59 29%,#75466d66 48%,transparent 73%);filter:blur(12px);opacity:0;transform:translate(-50%,-54%) scale(.92);animation:none}
+.hero-word:hover:after,.hero-word:focus-visible:after,.hero-word.is-flaming:after{left:var(--flame-x,50%);right:auto;top:var(--flame-y,100%);bottom:auto;width:82px;height:100px;background:radial-gradient(ellipse at 50% 82%,#fff0c2 0%,#ffb36a 18%,#e16e50 34%,#9a4b6c55 55%,transparent 72%);filter:blur(8px);opacity:0;transform:translate(-50%,-58%) scale(.85);animation:none}
+.hero-word.is-flaming:before{opacity:.95;animation:emberBreath .42s ease-in-out infinite alternate}
+.hero-word.is-flaming:after{opacity:.92;animation:emberFlicker .24s ease-in-out infinite alternate}
+@keyframes emberBreath{from{transform:translate(-50%,-50%) scale(.88) skewX(-4deg)}to{transform:translate(-50%,-58%) scale(1.08) skewX(4deg)}}
+@keyframes emberFlicker{from{transform:translate(-50%,-54%) scale(.78) rotate(-4deg)}to{transform:translate(-50%,-66%) scale(1.08) rotate(4deg)}}
+@media(max-width:650px){.brandmark-img{width:34px!important;height:34px!important;min-width:34px;flex-basis:34px}.hero-word{font-size:clamp(48px,13.5vw,86px)}}
+@media(prefers-reduced-motion:reduce){.hero-word.is-flaming:before,.hero-word.is-flaming:after{animation:none!important}}
 </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap navrow">
-<a class="brand" href="#home" aria-label="CODEYAAR home"><img class="brandmark-img" src="/cy-mark.svg" alt="" aria-hidden="true">CODEYAAR</a>
+<a class="brand" href="#home" aria-label="CODEYAAR home"><img class="brandmark-img" src="/cy-mark.svg?v=3" alt="" aria-hidden="true">CODEYAAR</a>
 <nav class="nav" aria-label="Main navigation"><a href="#home">Home</a><a href="#studio">Studio</a><a href="#work">Work</a><a href="#contact">Contact</a></nav>
 <div class="navright"><span class="availability"><i class="dot"></i> OPEN TO GOOD IDEAS</span><a class="navcta" href="#contact">START A PROJECT ↗</a><button class="menu" id="menuButton" aria-label="Go to contact">☰</button></div>
 </div></header>
@@ -278,15 +292,17 @@ if("IntersectionObserver" in window){const io=new IntersectionObserver(entries=>
 (()=>{const card=document.getElementById("scratchCard"),canvas=document.getElementById("scratchCanvas");if(!card||!canvas)return;const ctx=canvas.getContext("2d");let drawing=false,erased=0,last=null;const setup=()=>{const rect=card.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.globalCompositeOperation="source-over";const g=ctx.createLinearGradient(0,0,rect.width,rect.height);g.addColorStop(0,"#343832");g.addColorStop(.5,"#777b70");g.addColorStop(1,"#292d28");ctx.fillStyle=g;ctx.fillRect(0,0,rect.width,rect.height);ctx.fillStyle="#f5f4f0";ctx.font="9px 'DM Mono', monospace";ctx.textAlign="center";ctx.fillText("CODEYAAR / STUDIO PASS",rect.width/2,rect.height/2-2);ctx.font="7px 'DM Mono', monospace";ctx.fillText("RUB HERE TO REVEAL",rect.width/2,rect.height/2+15);erased=0;card.classList.remove("scratched")};const point=e=>{const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};const scratch=e=>{if(!drawing)return;const p=point(e);ctx.globalCompositeOperation="destination-out";ctx.lineWidth=25;ctx.lineCap="round";ctx.lineJoin="round";ctx.beginPath();if(last){ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y)}else{ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+1,p.y+1)}ctx.stroke();last=p;erased+=1;if(erased>16){card.classList.add("scratched");ctx.clearRect(0,0,canvas.width,canvas.height)}};canvas.addEventListener("pointerdown",e=>{drawing=true;last=null;canvas.setPointerCapture?.(e.pointerId);scratch(e)});canvas.addEventListener("pointermove",scratch);["pointerup","pointercancel","lostpointercapture"].forEach(ev=>canvas.addEventListener(ev,()=>{drawing=false;last=null}));setup();window.addEventListener("resize",setup,{passive:true})})();
 
 
-/* Flame hotspot follows the pointer or touch position over the wordmark. */
-(()=>{const word=document.getElementById("heroWord");if(!word)return;
+/* Pointer + touch tracked flame hotspot. */
+(()=>{const word=document.getElementById("heroWord");if(!word)return;let activeTouch=null,hideTimer;
  const setPoint=e=>{const r=word.getBoundingClientRect();const x=Math.max(0,Math.min(r.width,e.clientX-r.left));const y=Math.max(0,Math.min(r.height,e.clientY-r.top));word.style.setProperty("--flame-x",x+"px");word.style.setProperty("--flame-y",y+"px");word.classList.add("is-flaming")};
- word.addEventListener("pointermove",e=>{if(e.pointerType==="mouse"||e.buttons>0||e.pointerType==="pen")setPoint(e)});
- word.addEventListener("pointerdown",setPoint);
- const stop=e=>{if(e.pointerType!=="touch")word.classList.remove("is-flaming")};
- word.addEventListener("pointerleave",()=>word.classList.remove("is-flaming"));
- word.addEventListener("pointerup",e=>{if(e.pointerType==="touch")setTimeout(()=>word.classList.remove("is-flaming"),450)});
- word.addEventListener("pointercancel",()=>word.classList.remove("is-flaming"));
+ word.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")setPoint(e)});
+ word.addEventListener("pointermove",e=>{if(e.pointerType==="mouse"||e.pointerType==="pen"||(e.pointerType==="touch"&&activeTouch===e.pointerId))setPoint(e)});
+ word.addEventListener("pointerdown",e=>{if(e.pointerType==="touch")activeTouch=e.pointerId;clearTimeout(hideTimer);setPoint(e)});
+ const hide=()=>{activeTouch=null;hideTimer=setTimeout(()=>word.classList.remove("is-flaming"),easedDelay)};
+ const easedDelay=700;
+ word.addEventListener("pointerup",hide);
+ word.addEventListener("pointercancel",hide);
+ word.addEventListener("pointerleave",e=>{if(e.pointerType!=="touch"||activeTouch===null)word.classList.remove("is-flaming")});
  word.addEventListener("blur",()=>word.classList.remove("is-flaming"));
 })();
 
