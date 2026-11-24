@@ -29,9 +29,9 @@ Do not commit these values or put them in either HTML file. Never paste the Neon
 
 ## Contact form behavior
 
-The form submits to `POST /api/messages`. The endpoint checks the same-origin request, JSON content type, field lengths, email format, a hidden honeypot, and a minimum completion time before inserting a message into `public.contact_messages`. The dashboard uses authenticated API requests to list messages and change their status.
+The form submits to `POST /api/messages`. The endpoint checks the same-origin request, JSON content type, field lengths, email format, a hidden honeypot, and a minimum completion time before inserting a message into `public.contact_messages`. The dashboard uses authenticated API requests to list, update and permanently delete messages. Delete actions require confirmation.
 
-This is basic spam resistance, not a full rate-limiting service. Before promoting the site widely, consider enabling Cloudflare Turnstile and/or a rate-limiting rule for `POST /api/messages`.
+The contact endpoint also limits submissions to 5 per 10 minutes per client fingerprint. Admin sign-in limits failed attempts to 5 per 15 minutes. The limits use a keyed HMAC of Cloudflare's client IP header; raw client IP addresses are not stored by this rate-limit table. The `public.api_rate_limits` table is created by `migrations/001_api_rate_limits.sql`. Old counters are cleaned up periodically. For higher-risk public launches, add Cloudflare Turnstile and review provider-level abuse controls as well.
 
 ## Database
 
@@ -39,4 +39,4 @@ The Neon database schema is already applied. The `public.contact_messages` table
 
 ## Status
 
-The code and schema are committed, but a live Cloudflare Pages deployment and end-to-end test still require a Cloudflare account/project and its private environment variables. Do not treat the form as live until a test message appears in `/admin.html` on the Cloudflare Pages domain.
+The Pages deployment requires the encrypted production variables `DATABASE_URL`, `ADMIN_PASSWORD` and `SESSION_SECRET`. The contact form and inbox should be end-to-end tested after each production configuration change. Do not treat the form as operational until a test message appears in `/admin.html` on the Cloudflare Pages domain.

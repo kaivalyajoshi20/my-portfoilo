@@ -10,6 +10,8 @@ A responsive, editorial-style website for CODEYAAR, an independent digital studi
 - Services, current focus, capabilities and contact sections
 - Cloudflare Pages Functions contact form and existing admin inbox
 - SEO and social preview metadata, custom SVG favicon
+- Privacy Policy, Terms of Use, robots.txt and sitemap.xml
+- Security headers, bounded request bodies, origin checks and database-backed rate limits
 - Reduced-motion support and accessible form status messages
 
 ## Local preview
