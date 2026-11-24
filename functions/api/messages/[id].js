@@ -16,19 +16,26 @@ async function authorized(request, env) {
     return payload.sub === 'portfolio-admin' && Number(payload.exp) > Math.floor(Date.now() / 1000);
   } catch { return false; }
 }
+function sameOrigin(request) {
+  const origin = request.headers.get('Origin');
+  return Boolean(origin && origin === new URL(request.url).origin);
+}
 export async function onRequestPatch({ request, env, params }) {
   if (!env.DATABASE_URL || !env.SESSION_SECRET) return json({ error: 'Server is not configured yet.' }, 503);
-  const origin = request.headers.get('Origin');
-  if (!origin || origin !== new URL(request.url).origin) return json({ error: 'Request not allowed.' }, 403);
+  if (!sameOrigin(request)) return json({ error: 'Request not allowed.' }, 403);
   if (!(request.headers.get('Content-Type') || '').toLowerCase().includes('application/json')) return json({ error: 'Invalid request.' }, 415);
-  const origin = request.headers.get('Origin');
-  if (!origin || origin !== new URL(request.url).origin) return json({ error: 'Request not allowed.' }, 403);
+  const declaredLength = Number(request.headers.get('Content-Length') || 0);
+  if (Number.isFinite(declaredLength) && declaredLength > 2_048) return json({ error: 'Invalid request.' }, 413);
   if (!await authorized(request, env)) return json({ error: 'Unauthorized.' }, 401);
   const id = String(params.id || '');
-  if (!/^\d{1,18}$/.test(id)) return json({ error: 'Invalid message ID.' }, 400);
+  if (!/^\\d{1,18}$/.test(id)) return json({ error: 'Invalid message ID.' }, 400);
   let body;
-  try { body = await request.json(); } catch { return json({ error: 'Invalid request.' }, 400); }
-  if (!['new', 'read', 'archived'].includes(body.status)) return json({ error: 'Invalid status.' }, 400);
+  try {
+    const raw = await request.text();
+    if (new TextEncoder().encode(raw).byteLength > 2_048) return json({ error: 'Invalid request.' }, 413);
+    body = JSON.parse(raw);
+  } catch { return json({ error: 'Invalid request.' }, 400); }
+  if (!body || typeof body !== 'object' || Array.isArray(body) || !['new', 'read', 'archived'].includes(body.status)) return json({ error: 'Invalid status.' }, 400);
   try {
     const sql = neon(env.DATABASE_URL);
     const rows = await sql`UPDATE public.contact_messages SET status = ${body.status} WHERE id = ${id} RETURNING id, status`;
@@ -39,9 +46,10 @@ export async function onRequestPatch({ request, env, params }) {
 
 export async function onRequestDelete({ request, env, params }) {
   if (!env.DATABASE_URL || !env.SESSION_SECRET) return json({ error: 'Server is not configured yet.' }, 503);
+  if (!sameOrigin(request)) return json({ error: 'Request not allowed.' }, 403);
   if (!await authorized(request, env)) return json({ error: 'Unauthorized.' }, 401);
   const id = String(params.id || '');
-  if (!/^\d{1,18}$/.test(id)) return json({ error: 'Invalid message ID.' }, 400);
+  if (!/^\\d{1,18}$/.test(id)) return json({ error: 'Invalid message ID.' }, 400);
   try {
     const sql = neon(env.DATABASE_URL);
     const rows = await sql`DELETE FROM public.contact_messages WHERE id = ${id} RETURNING id`;
