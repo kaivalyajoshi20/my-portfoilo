@@ -3,7 +3,8 @@ import { neon } from '@neondatabase/serverless';
 const encoder = new TextEncoder();
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'" } });
 async function authorized(request, env) {
-  const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
+  const cookie = (request.headers.get('Cookie') || '').split(';').map(part => part.trim()).find(part => part.startsWith('__Secure-cy_admin='));
+  const token = cookie ? cookie.slice('__Secure-cy_admin='.length) : '';
   if (!token || !env.SESSION_SECRET) return false;
   const parts = token.split('.');
   if (parts.length !== 2) return false;
@@ -17,6 +18,11 @@ async function authorized(request, env) {
 }
 export async function onRequestPatch({ request, env, params }) {
   if (!env.DATABASE_URL || !env.SESSION_SECRET) return json({ error: 'Server is not configured yet.' }, 503);
+  const origin = request.headers.get('Origin');
+  if (!origin || origin !== new URL(request.url).origin) return json({ error: 'Request not allowed.' }, 403);
+  if (!(request.headers.get('Content-Type') || '').toLowerCase().includes('application/json')) return json({ error: 'Invalid request.' }, 415);
+  const origin = request.headers.get('Origin');
+  if (!origin || origin !== new URL(request.url).origin) return json({ error: 'Request not allowed.' }, 403);
   if (!await authorized(request, env)) return json({ error: 'Unauthorized.' }, 401);
   const id = String(params.id || '');
   if (!/^\d{1,18}$/.test(id)) return json({ error: 'Invalid message ID.' }, 400);
