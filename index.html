@@ -39,7 +39,7 @@
 #scratchCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;z-index:2}
 .scratch-label{position:absolute;z-index:3;bottom:7px;left:0;right:0;text-align:center;pointer-events:none;color:#fff;font:9px var(--mono);letter-spacing:.13em;text-shadow:0 1px 3px #20252b}
 .scratch-card.scratched #scratchCanvas,.scratch-card.scratched .scratch-label{opacity:0;transition:opacity .6s;pointer-events:none}
-.hero-center{width:min(1100px,100%);min-height:290px;display:flex;align-items:center;justify-content:center;position:relative}
+.hero-center{width:min(1100px,100%);min-height:290px;display:flex;align-items:center;justify-content:center;position:relative}.hero-hover-hint{margin:0 0 -8px;font:9px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:#c2a98a;text-align:center;position:relative;z-index:4;}
 .hero-word-wrap{position:relative;text-align:center;z-index:2}
 .hero-word{position:relative;z-index:2;font:800 clamp(64px,12.5vw,156px)/.88 var(--display);letter-spacing:-.105em;margin:0;white-space:nowrap;color:#171816;cursor:pointer;transition:color .25s,text-shadow .25s,transform .25s;outline:none}
 .hero-word:hover,.hero-word:focus-visible{color:#e3424f;text-shadow:0 0 8px #ff6a1a,0 0 24px #e3424f99,0 -12px 34px #ff6a1a70;transform:translateY(-3px) scale(1.025);animation:flamePulse .75s ease-in-out infinite alternate}
@@ -59,7 +59,7 @@
 .hero-actions-center{justify-content:center;margin-top:20px}
 .hero-bottomline{margin-top:auto;padding-top:30px}
 .hero-bottomline b{color:var(--cyan);font-size:14px;margin-left:8px}
-@media(max-width:650px){.hero-showcase{min-height:650px;padding:25px 17px 20px}.hero-index{font-size:7px}.scratch-wrap{margin:27px 0 20px}.scratch-card{width:290px;height:154px}.hero-center{min-height:220px}.hero-word{font-size:clamp(47px,12vw,76px)}.hero-orbit{width:112%;height:155%}.orbit-two{width:130%;height:190%}.hero-tagline{font-size:7px;letter-spacing:.12em}.hero-intro{font-size:12px;max-width:340px}.hero-bottomline{font-size:7px;padding-top:25px}.hero-actions-center{margin-top:17px}}
+@media(max-width:650px){.hero-hover-hint{font-size:8px;margin-bottom:-5px}.hero-showcase{min-height:650px;padding:25px 17px 20px}.hero-index{font-size:7px}.scratch-wrap{margin:27px 0 20px}.scratch-card{width:290px;height:154px}.hero-center{min-height:220px}.hero-word{font-size:clamp(47px,12vw,76px)}.hero-orbit{width:112%;height:155%}.orbit-two{width:130%;height:190%}.hero-tagline{font-size:7px;letter-spacing:.12em}.hero-intro{font-size:12px;max-width:340px}.hero-bottomline{font-size:7px;padding-top:25px}.hero-actions-center{margin-top:17px}}
 @media(max-width:390px){.scratch-card{width:270px;height:145px}.hero-word{font-size:43px}.hero-tagline{font-size:6px}}
 @media(prefers-reduced-motion:reduce){.hero-word:hover,.hero-word:focus-visible,.hero-word:hover:before,.hero-word:hover:after,.hero-word:hover .firework{animation:none!important}}
 
@@ -213,9 +213,10 @@ body{background:var(--paper);color:var(--ink)}
 <div class="scratch-card" id="scratchCard" aria-label="Scratch the card to reveal a message. More than 40 percent must be scratched.">
 <div class="scratch-reveal"><span class="scratch-overline">A LITTLE SPARK GOES A LONG WAY</span><strong>GOOD IDEAS<br>DESERVE TO BE BUILT.</strong><span class="scratch-hint">YOU FOUND THE GOOD STUFF ✦</span></div>
 <canvas id="scratchCanvas" aria-label="Scratch this card to reveal a studio message"></canvas>
-<span class="scratch-label">✦ SCRATCH TO REVEAL ✦</span>
+<span class="scratch-label">✦ FIRST TAP, THEN SCRATCH ✦</span>
 </div>
 </div>
+<p class="hero-hover-hint" aria-label="Hover your finger over the CODEYAAR wordmark">✦ HOVER YOUR FINGER ✦</p>
 <div class="hero-center">
 
 <div class="hero-word-wrap">
