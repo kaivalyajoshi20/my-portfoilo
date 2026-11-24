@@ -5,7 +5,8 @@ const encoder = new TextEncoder();
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'" } });
 const b64url = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 async function authorized(request, env) {
-  const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
+  const cookie = (request.headers.get('Cookie') || '').split(';').map(part => part.trim()).find(part => part.startsWith('__Secure-cy_admin='));
+  const token = cookie ? cookie.slice('__Secure-cy_admin='.length) : '';
   if (!token || !env.SESSION_SECRET) return false;
   const parts = token.split('.');
   if (parts.length !== 2) return false;
