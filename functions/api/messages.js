@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { enforceRateLimit } from './_rate-limit.js';
 
 const encoder = new TextEncoder();
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'" } });
@@ -29,7 +30,7 @@ export async function onRequestGet({ request, env }) {
 }
 
 export async function onRequestPost({ request, env }) {
-  if (!env.DATABASE_URL) return json({ error: 'The contact form is not configured yet.' }, 503);
+  if (!env.DATABASE_URL || !env.SESSION_SECRET) return json({ error: 'The contact form is not configured yet.' }, 503);
   const origin = request.headers.get('Origin');
   if (!origin || origin !== new URL(request.url).origin) return json({ error: 'Request not allowed.' }, 403);
   const contentType = request.headers.get('Content-Type') || '';
@@ -58,6 +59,7 @@ export async function onRequestPost({ request, env }) {
   if (!message || message.length > 5000) return json({ error: 'Please add a message under 5,000 characters.' }, 400);
   try {
     const sql = neon(env.DATABASE_URL);
+    if (!await enforceRateLimit(sql, request, env, 'contact-submit', 5, 600)) return json({ error: 'Too many messages from this connection. Please wait a little before trying again.' }, 429);
     await sql`INSERT INTO public.contact_messages (name, email, subject, message) VALUES (${name}, ${email}, ${subject || null}, ${message})`;
     return json({ ok: true }, 201);
   } catch {

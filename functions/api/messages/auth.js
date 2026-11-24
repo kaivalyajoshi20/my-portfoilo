@@ -1,3 +1,6 @@
+import { neon } from '@neondatabase/serverless';
+import { enforceRateLimit } from '../_rate-limit.js';
+
 const encoder = new TextEncoder();
 const b64url = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 async function sign(payload, secret) {
@@ -22,6 +25,10 @@ export async function onRequestPost({ request, env }) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Invalid request.' }, 400);
   const supplied = typeof body.password === 'string' ? body.password : '';
   if (supplied.length > 256 || supplied !== env.ADMIN_PASSWORD) {
+    try {
+      const sql = neon(env.DATABASE_URL);
+      if (!await enforceRateLimit(sql, request, env, 'admin-login', 5, 900)) return json({ error: 'Too many failed sign-in attempts. Please wait 15 minutes and try again.' }, 429);
+    } catch { return json({ error: 'Sign-in is temporarily unavailable.' }, 503); }
     await new Promise(resolve => setTimeout(resolve, 350));
     return json({ error: 'Incorrect password.' }, 401);
   }
