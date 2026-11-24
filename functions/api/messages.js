@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 
 const encoder = new TextEncoder();
-const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
+const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'" } });
 const b64url = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 async function authorized(request, env) {
   const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
@@ -35,9 +35,12 @@ export async function onRequestPost({ request, env }) {
   const contentType = request.headers.get('Content-Type') || '';
   if (!contentType.toLowerCase().includes('application/json')) return json({ error: 'Please submit the form normally.' }, 415);
   const declaredLength = Number(request.headers.get('Content-Length') || 0);
-  if (declaredLength > 12_000) return json({ error: 'Your message is too long.' }, 413);
+  if (Number.isFinite(declaredLength) && declaredLength > 12_000) return json({ error: 'Your message is too long.' }, 413);
+  let rawBody;
+  try { rawBody = await request.text(); } catch { return json({ error: 'Please check the form and try again.' }, 400); }
+  if (new TextEncoder().encode(rawBody).byteLength > 12_000) return json({ error: 'Your message is too long.' }, 413);
   let body;
-  try { body = await request.json(); } catch { return json({ error: 'Please check the form and try again.' }, 400); }
+  try { body = JSON.parse(rawBody); } catch { return json({ error: 'Please check the form and try again.' }, 400); }
   if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Please check the form and try again.' }, 400);
   // Quietly accept honeypot submissions without storing spam.
   if (typeof body.website === 'string' && body.website.trim()) return json({ ok: true });

@@ -1,5 +1,3 @@
-import { neon } from '@neondatabase/serverless';
-
 const encoder = new TextEncoder();
 const b64url = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 async function sign(payload, secret) {
@@ -8,12 +6,21 @@ async function sign(payload, secret) {
   const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
   return data + '.' + b64url(signature);
 }
-const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
+const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'" } });
 export async function onRequestPost({ request, env }) {
   if (!env.ADMIN_PASSWORD || !env.SESSION_SECRET || !env.DATABASE_URL) return json({ error: 'Server is not configured yet.' }, 503);
+  const origin = request.headers.get('Origin');
+  if (!origin || origin !== new URL(request.url).origin) return json({ error: 'Request not allowed.' }, 403);
+  if (!(request.headers.get('Content-Type') || '').toLowerCase().includes('application/json')) return json({ error: 'Invalid request.' }, 415);
+  const declaredLength = Number(request.headers.get('Content-Length') || 0);
+  if (Number.isFinite(declaredLength) && declaredLength > 2_048) return json({ error: 'Invalid request.' }, 413);
+  let rawBody;
+  try { rawBody = await request.text(); } catch { return json({ error: 'Invalid request.' }, 400); }
+  if (new TextEncoder().encode(rawBody).byteLength > 2_048) return json({ error: 'Invalid request.' }, 413);
   let body;
-  try { body = await request.json(); } catch { return json({ error: 'Invalid request.' }, 400); }
-  const supplied = String(body.password || '');
+  try { body = JSON.parse(rawBody); } catch { return json({ error: 'Invalid request.' }, 400); }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Invalid request.' }, 400);
+  const supplied = typeof body.password === 'string' ? body.password : '';
   if (supplied.length > 256 || supplied !== env.ADMIN_PASSWORD) {
     await new Promise(resolve => setTimeout(resolve, 350));
     return json({ error: 'Incorrect password.' }, 401);

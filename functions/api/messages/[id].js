@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 
 const encoder = new TextEncoder();
-const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
+const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'" } });
 async function authorized(request, env) {
   const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
   if (!token || !env.SESSION_SECRET) return false;
@@ -29,4 +29,17 @@ export async function onRequestPatch({ request, env, params }) {
     if (!rows.length) return json({ error: 'Message not found.' }, 404);
     return json({ message: rows[0] });
   } catch { return json({ error: 'Unable to update this message.' }, 500); }
+}
+
+export async function onRequestDelete({ request, env, params }) {
+  if (!env.DATABASE_URL || !env.SESSION_SECRET) return json({ error: 'Server is not configured yet.' }, 503);
+  if (!await authorized(request, env)) return json({ error: 'Unauthorized.' }, 401);
+  const id = String(params.id || '');
+  if (!/^\d{1,18}$/.test(id)) return json({ error: 'Invalid message ID.' }, 400);
+  try {
+    const sql = neon(env.DATABASE_URL);
+    const rows = await sql`DELETE FROM public.contact_messages WHERE id = ${id} RETURNING id`;
+    if (!rows.length) return json({ error: 'Message not found.' }, 404);
+    return json({ ok: true });
+  } catch { return json({ error: 'Unable to delete this message.' }, 500); }
 }
