@@ -1,0 +1,27 @@
+name: Dependency security audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 8 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate an audit lockfile
+        run: npm install --package-lock-only --ignore-scripts --no-audit
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
